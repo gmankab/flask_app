@@ -1,0 +1,24 @@
+[project]
+dependencies = [
+    'email-validator',
+    'sqlalchemy',
+    'aiosqlite',
+    'waitress',
+    'greenlet',
+    'pydantic',
+    'asgiref',
+    'flask',
+]
+
+name = 'flask-test'
+version = '0.0.1'
+readme = 'readme.md'
+requires-python = '>=3.11'
+classifiers = [
+    'License :: OSI Approved :: GNU Affero General Public License v3',
+]
+
+[tool.pyright]
+venvPath = '.'
+venv = '.venv'
+
