@@ -1,6 +1,7 @@
 [project]
 dependencies = [
     'email-validator',
+    'pytest-asyncio',
     'sqlalchemy',
     'aiosqlite',
     'waitress',
@@ -22,4 +23,7 @@ classifiers = [
 [tool.pyright]
 venvPath = '.'
 venv = '.venv'
+
+[tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope = "module"
 
