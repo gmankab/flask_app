@@ -4,6 +4,7 @@ dependencies = [
     'sqlalchemy',
     'aiosqlite',
     'waitress',
+    'flasgger',
     'greenlet',
     'pydantic',
     'asgiref',

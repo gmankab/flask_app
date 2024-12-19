@@ -9,7 +9,17 @@ import typing
 @app.get('/data/count-recent')
 async def data_count_recent() -> tuple[dict[str, int], int]:
     '''
-    counts the number of users registered in the last 7 days
+    count recently registered users in the last 7 days
+
+    this endpoint returns the number of users who registered within the last 7 days
+    ---
+    responses:
+      200:
+        schema:
+          type: object
+          properties:
+            count:
+              type: integer
     '''
     cutoff = int(
         (
@@ -29,7 +39,19 @@ async def data_count_recent() -> tuple[dict[str, int], int]:
 @app.get('/data/top-longest')
 async def data_top_longest() -> tuple[dict[str, typing.List[str]], int]:
     '''
-    returns the top 5 users with the longest usernames
+    retrieve the top 5 users with the longest usernames
+
+    this endpoint queries the database and returns the top 5 users ordered by the length of their username in descending order
+    ---
+    responses:
+      200:
+        schema:
+          type: object
+          properties:
+            users:
+              type: array
+              items:
+                type: string
     '''
     async with async_session() as session:
         users = await session.execute(
@@ -48,7 +70,24 @@ async def data_top_longest() -> tuple[dict[str, typing.List[str]], int]:
 @app.get('/data/proportion')
 async def data_proportion() -> tuple[dict[str, typing.Any], int]:
     '''
-    determines the proportion of users with email addresses at the specified domain
+    determine the proportion of users with email addresses at a specified domain
+
+    this endpoint calculates the fraction of users who have email addresses ending with the given domain
+    ---
+    parameters:
+      - name: domain
+        in: query
+        required: true
+        type: string
+    responses:
+      200:
+        schema:
+          type: object
+          properties:
+            domain:
+              type: string
+            proportion:
+              type: number
     '''
     domain = flask.request.args.get('domain')
     assert domain
