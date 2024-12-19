@@ -1,33 +1,28 @@
-import pytest
-import datetime
 from app.common import async_session
 from app import models
-import asyncio
+import collections.abc
 import flask.testing
 import flask
 import app.common
-import app
+import datetime
+import asyncio
+import pytest
 
 
 @pytest.fixture()
-def testapp():
+def testapp() -> collections.abc.Generator:
     asyncio.run(app.common.init_models())
     app.common.app.config.update({'TESTING': True})
     yield app.common.app
 
 
 @pytest.fixture()
-def client(testapp: flask.Flask):
+def client(testapp: flask.Flask) -> flask.testing.FlaskClient:
     return testapp.test_client()
 
 
-@pytest.fixture()
-def runner(testapp: flask.Flask):
-    return testapp.test_cli_runner()
-
-
-def test_count_recent(client: flask.testing.FlaskClient):
-    async def prepare():
+def test_count_recent(client: flask.testing.FlaskClient) -> None:
+    async def prepare() -> None:
         async with async_session() as session:
             await session.execute(models.User.__table__.delete())
             await session.commit()
@@ -46,8 +41,8 @@ def test_count_recent(client: flask.testing.FlaskClient):
     assert data['count'] == 2
 
 
-def test_top_longest(client: flask.testing.FlaskClient):
-    async def prepare():
+def test_top_longest(client: flask.testing.FlaskClient) -> None:
+    async def prepare() -> None:
         async with async_session() as session:
             await session.execute(models.User.__table__.delete())
             await session.commit()
@@ -78,8 +73,8 @@ def test_top_longest(client: flask.testing.FlaskClient):
     ]
 
 
-def test_data_proportion(client: flask.testing.FlaskClient):
-    async def prepare():
+def test_data_proportion(client: flask.testing.FlaskClient) -> None:
+    async def prepare() -> None:
         async with async_session() as session:
             await session.execute(models.User.__table__.delete())
             await session.commit()

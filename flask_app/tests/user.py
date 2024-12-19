@@ -1,3 +1,4 @@
+import collections.abc
 import pytest
 import asyncio
 import app.common
@@ -6,7 +7,7 @@ import flask
 
 
 @pytest.fixture()
-def testapp():
+def testapp() -> collections.abc.Generator:
     asyncio.run(app.common.init_models())
     app.common.app.config.update({
         'TESTING': True,
@@ -15,18 +16,13 @@ def testapp():
 
 
 @pytest.fixture()
-def client(testapp: flask.Flask):
+def client(testapp: flask.Flask) -> flask.testing.FlaskClient:
     return testapp.test_client()
-
-
-@pytest.fixture()
-def runner(testapp: flask.Flask):
-    return testapp.test_cli_runner()
 
 
 def test_create_user(
     client: flask.testing.FlaskClient
-):
+) -> None:
     r = client.post(
         '/user/create',
         json={
@@ -39,7 +35,7 @@ def test_create_user(
 
 def test_get_user(
     client: flask.testing.FlaskClient
-):
+) -> None:
     r = client.get('/user/get?id=1')
     assert r.status_code==200
     assert r.get_json()['username']=='user1'
@@ -47,7 +43,7 @@ def test_get_user(
 
 def test_update_user(
     client: flask.testing.FlaskClient
-):
+) -> None:
     r = client.post(
         '/user/update',
         json={
@@ -62,7 +58,7 @@ def test_update_user(
 
 def test_list_all(
     client: flask.testing.FlaskClient
-):
+) -> None:
     r = client.get('/user/list-all')
     assert r.status_code == 200
     assert r.get_json()['total_users'] == 1
@@ -70,7 +66,7 @@ def test_list_all(
 
 def test_delete_user(
     client: flask.testing.FlaskClient
-):
+) -> None:
     r = client.post(
         '/user/delete',
         json={'id': 1}

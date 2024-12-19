@@ -124,7 +124,7 @@ async def user_list_all() -> dict[str, typing.Any]:
 
 
 @app.errorhandler(Exception)
-def handle_bad_request(e: Exception):
+def handle_bad_request(e: Exception) -> tuple[str, int]:
     traceback.print_exception(e)
     return f'{type(e)}: {e}', 400
 
