@@ -1,5 +1,5 @@
 import app.common
-import app.data
+import api.data
 import pytest
 import datetime
 import pytest_asyncio
@@ -25,7 +25,7 @@ async def test_count_recent_users():
             models.User(username='old1', email='o1@example.com', registration_date=old),
         ])
         await session.commit()
-        assert await app.data.count_recent_users() == 2
+        assert await api.data.count_recent_users() == 2
 
 
 @pytest.mark.asyncio
@@ -47,7 +47,7 @@ async def test_top_5_longest_names():
                 models.User(username=n, email=f'{n}@example.com', registration_date=now)
             )
         await session.commit()
-        longest = await app.data.top_5_longest_names()
+        longest = await api.data.top_5_longest_names()
         assert [u.username for u in longest] == [
             '123456',
             '12345',
@@ -67,7 +67,7 @@ async def test_email_domain_proportion():
         session.add(models.User(username='user2', email='user2@gmail.com', registration_date=now))
         session.add(models.User(username='user3', email='user3@yahoo.com', registration_date=now))
         await session.commit()
-        assert await app.data.email_domain_proportion('gmail.com') == 2 / 3
-        assert await app.data.email_domain_proportion('yahoo.com') == 1 / 3
-        assert await app.data.email_domain_proportion('example.com') == 0
+        assert await api.data.email_domain_proportion('gmail.com') == 2 / 3
+        assert await api.data.email_domain_proportion('yahoo.com') == 1 / 3
+        assert await api.data.email_domain_proportion('example.com') == 0
 
