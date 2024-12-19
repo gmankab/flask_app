@@ -53,6 +53,7 @@ def test_update_user(
         json={
             'id': 1,
             'username': 'user1_new',
+            'active_sessions': '2',
             'email': 'user1_new@example.com'
         }
     )

@@ -8,5 +8,6 @@ class User(Base):
     id: Any = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
     username: Any = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     email: Any = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    active_sessions: Any = sqlalchemy.Column(sqlalchemy.Integer)
     registration_date: Any = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)
 

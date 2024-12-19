@@ -6,6 +6,7 @@ class User(BaseModel):
     id: int
     username: str
     email: EmailStr
+    active_sessions: int
     registration_date: int
 
 class UserCreate(BaseModel):
@@ -16,6 +17,7 @@ class UserUpdate(BaseModel):
     id: int
     username: Optional[str] = Field(None, min_length=1)
     email: Optional[EmailStr] = None
+    active_sessions: int
 
 class UserDelete(BaseModel):
     id: int

@@ -1,6 +1,7 @@
 from app.common import app, async_session
 from app import models, schemas
 import sqlalchemy
+import traceback
 import datetime
 import typing
 import flask
@@ -14,6 +15,7 @@ async def user_create() -> tuple[str, int]:
         user = models.User(
             username=data.username,
             email=data.email,
+            active_sessions=1,
             registration_date=int(
                 datetime.datetime.now(
                     datetime.timezone.utc
@@ -38,6 +40,7 @@ async def user_get() -> tuple[dict[str, typing.Any], int]:
             'id': user.id,
             'username': user.username,
             'email': user.email,
+            'active_sessions': user.active_sessions,
             'registration_date': user.registration_date
         }
     return user_data, 200
@@ -50,10 +53,12 @@ async def user_update() -> tuple[str, int]:
     async with async_session() as session:
         user: models.User = await session.get(models.User, data.id)
         assert user
-        if data.username is not None:
+        if data.username:
             user.username = data.username
-        if data.email is not None:
+        if data.email:
             user.email = data.email
+        if data.active_sessions:
+            user.active_sessions = data.active_sessions
         await session.commit()
     return 'updated', 200
 
@@ -102,6 +107,7 @@ async def user_list_all() -> dict[str, typing.Any]:
                 id=user.id,
                 username=user.username,
                 email=user.email,
+                active_sessions=user.active_sessions,
                 registration_date=user.registration_date
             ).model_dump()
             for user in users
@@ -116,5 +122,6 @@ async def user_list_all() -> dict[str, typing.Any]:
 
 @app.errorhandler(Exception)
 def handle_bad_request(e: Exception):
-    return str(e), 400
+    traceback.print_exception(e)
+    return f'{type(e)}: {e}', 400
 

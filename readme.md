@@ -27,7 +27,7 @@ curl -X GET "http://localhost:5000/user/get?id=1"
 
 ```shell
 curl -X POST http://localhost:5000/user/update -H "Content-Type: application/json" \
--d '{"id": 1, "username": "user1_new", "email": "user1_new@example.com"}'
+-d '{"id": 1, "username": "user1_new", "active_sessions": 2, "email": "user1_new@example.com"}'
 ```
 
 ```shell
