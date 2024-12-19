@@ -1,5 +1,5 @@
 from app.common import app, async_session
-from app import models, schemas
+from app import models, schemas, predict
 import sqlalchemy
 import traceback
 import datetime
@@ -35,15 +35,16 @@ async def user_get() -> tuple[dict[str, typing.Any], int]:
     )
     async with async_session() as session:
         user: models.User = await session.get(models.User, data.id)
-        assert user
-        user_data: dict[str, typing.Any] = {
-            'id': user.id,
-            'username': user.username,
-            'email': user.email,
-            'active_sessions': user.active_sessions,
-            'registration_date': user.registration_date
-        }
-    return user_data, 200
+    assert user
+    predict_activity = await predict.predict_activity(user.id)
+    return schemas.User(
+        id=user.id,
+        username=user.username,
+        email=user.email,
+        active_sessions=user.active_sessions,
+        registration_date=user.registration_date,
+        predict_activity=predict_activity,
+    ).model_dump(), 200
 
 
 @app.post('/user/update')
@@ -101,17 +102,19 @@ async def user_list_all() -> dict[str, typing.Any]:
             offset
         ).limit(users_per_page)
         users_result = await session.execute(users_query)
-        users = users_result.scalars().all()
-        users_data = [
-            schemas.User(
-                id=user.id,
-                username=user.username,
-                email=user.email,
-                active_sessions=user.active_sessions,
-                registration_date=user.registration_date
-            ).model_dump()
-            for user in users
-        ]
+        users_data: list[dict] = []
+        for user in users_result.scalars().all():
+            predict_activity = await predict.predict_activity(user.id)
+            users_data.append(
+                schemas.User(
+                    id=user.id,
+                    username=user.username,
+                    email=user.email,
+                    active_sessions=user.active_sessions,
+                    registration_date=user.registration_date,
+                    predict_activity=predict_activity,
+                ).model_dump()
+            )
     return schemas.UserListAllResponse(
         users=users_data,
         total_pages=total_pages,

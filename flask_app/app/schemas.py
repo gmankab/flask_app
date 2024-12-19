@@ -8,6 +8,7 @@ class User(BaseModel):
     email: EmailStr
     active_sessions: int
     registration_date: int
+    predict_activity: float
 
 class UserCreate(BaseModel):
     username: str = Field(..., min_length=1)
