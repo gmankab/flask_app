@@ -13,8 +13,9 @@ run_dev.py - run app on local machine for development and debugging with `flask 
 
 run_prod.py - run app for production with `waitress`
 
-### api testing with curl
+run_tests.py - run unit tests with `pytest`
 
+### api testing with curl
 
 ```shell
 curl -X POST http://localhost:5000/user/create -H "Content-Type: application/json" \
@@ -38,10 +39,21 @@ curl -X GET http://localhost:5000/user/list-all
 curl -X POST http://localhost:5000/user/delete -H "Content-Type: application/json" -d '{"id": 1}'
 ```
 
+```shell
+curl -X GET "http://localhost:5000/data/count-recent"
+```
+
+```shell
+curl -X GET "http://localhost:5000/data/top-longest"
+```
+
+```shell
+curl -X GET "http://localhost:5000/data/proportion?domain=example.com"
+```
+
 ### linting
 
 `ruff` and `pyright` linters are used
-
 
 ```shell
 python -m uv pip isntall ruff pyright
